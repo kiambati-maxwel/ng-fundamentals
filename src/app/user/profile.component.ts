@@ -6,7 +6,7 @@ import { Router } from '@angular/router'
   templateUrl: `./profile.component.html`,
 })
 export class ProfileComponent implements OnInit {
-
+  // --------------- error -------------
   profileForm: FormGroup
 
   constructor(private authService: AuthService, private router: Router) {
