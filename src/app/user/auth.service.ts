@@ -5,19 +5,20 @@ import { IUser } from './user.model'
 
 export class AuthService {
   currentUser: IUser
-  loginUser(username: string, password: string){
-    this.currentUser ={
+  loginUser(username: string, password: string) {
+    this.currentUser = {
       id: 1,
       firstName: 'john',
       lastName: 'papa',
-      username: 'papa'
+      username: 'john'
     }
   }
-  isAuthenticated(){
+  isAuthenticated() {
     return !!this.currentUser
   }
-  apdateCurrentUser(first:string, last:string){
+  apdateCurrentUser(first: string, last: string) {
     this.currentUser.firstName = first
     this.currentUser.lastName = last
+    this.currentUser.username = first
   }
 }

@@ -1,24 +1,61 @@
-import { Injectable } from '@angular/core'
+import { Injectable, EventEmitter } from '@angular/core'
 import { Subject, Observable } from 'rxjs'
-import { IEvent } from './event.model'
+import { IEvent, ISession } from './event.model'
 
 @Injectable()
 
 export class EventService {
-  getEvents():Observable<IEvent[]>{
+  getEvents(): Observable<IEvent[]> {
     let subject = new Subject<IEvent[]>()
-    setTimeout(()=> {subject.next(EVENTS); subject.complete(); }, 100)
+    setTimeout(() => { subject.next(EVENTS); subject.complete(); }, 100)
     return subject
   }
-  getEvent(id: number):IEvent{
-    return EVENTS.find( event => event.id === id)
+
+  getEvent(id: number): IEvent {
+    return EVENTS.find(event => event.id === id)
+  }
+
+  saveEvent(event) {
+    event.id = 99
+    event.session = []
+    EVENTS.push(event)
+  }
+
+  updateEvent(event) {
+    const index = EVENTS.findIndex(x => x.id = event.id)
+    EVENTS[index] = event
+  }
+
+  searchSessions(searchTerm: string) {
+    const term = searchTerm.toLocaleLowerCase()
+    let results: ISession[] = []
+    EVENTS.forEach(event => {
+      const matchingSession = event.sessions.filter(session => {
+        return session.name.toLocaleLowerCase().indexOf(term) > -1
+      })
+
+      matchingSession.map((session: any) => {
+        session.eventId = event.id
+        return session
+      })
+
+      results = results.concat(matchingSession)
+    })
+
+    const emmiter = new EventEmitter(true)
+
+    setTimeout(() => {
+      emmiter.emit(results)
+    }, 100)
+
+    return emmiter
   }
 }
-const EVENTS:IEvent[] = [
+const EVENTS: IEvent[] = [
   {
     id: 1,
     name: 'Angular Connect',
-    date: new Date ('9/26/2036'),
+    date: new Date('9/26/2036'),
     time: '10:00 am',
     price: 599.99,
     imageUrl: '/assets/images/angularconnect-shield.png',
@@ -96,7 +133,7 @@ const EVENTS:IEvent[] = [
   {
     id: 2,
     name: 'ng-nl',
-    date: new Date ('4/15/2037'),
+    date: new Date('4/15/2037'),
     time: '9:00 am',
     price: 950.00,
     imageUrl: '/assets/images/ng-nl.png',
@@ -152,7 +189,7 @@ const EVENTS:IEvent[] = [
   {
     id: 3,
     name: 'ng-conf 2037',
-    date: new Date ('5/4/2037'),
+    date: new Date('5/4/2037'),
     time: '9:00 am',
     price: 759.00,
     imageUrl: '/assets/images/ng-conf.png',
